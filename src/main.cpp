@@ -44,11 +44,13 @@ void setup() {
 
 void displayData() {
   // GPS Data
-  if (gps.location.isUpdated()) {
+  if (true) {
     Serial.print("Latitude: ");
     Serial.print(gps.location.lat(), 6);
     Serial.print(", Longitude: ");
     Serial.println(gps.location.lng(), 6);
+  } else {
+    Serial.println("No GPS");
   }
   
   // Temperature Data
@@ -92,11 +94,13 @@ void displayData() {
     Serial.print(":");
     Serial.println(gps.time.second());
   }
+
+  Serial.println("---------------------");
 }
 
 void loop() {
   // Read GPS data
-  while (gpsSerial.available() > 0) {
+  while (gpsSerial.available()) {
     char c = gpsSerial.read();
     gps.encode(c); // Process the character
   }
