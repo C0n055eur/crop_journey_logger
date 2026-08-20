@@ -29,6 +29,7 @@ void setup() {
   dht.begin();
 
   // Initialize MPU6050
+  Wire.begin(21, 22);
   if (!mpu.begin()) {
     Serial.println("Failed to find MPU6050 chip!");
     while (1);
@@ -44,7 +45,7 @@ void setup() {
 
 void displayData() {
   // GPS Data
-  if (true) {
+  if (gps.location.isValid()) {
     Serial.print("Latitude: ");
     Serial.print(gps.location.lat(), 6);
     Serial.print(", Longitude: ");
