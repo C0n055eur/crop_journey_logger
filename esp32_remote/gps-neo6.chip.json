@@ -1,0 +1,11 @@
+{
+  "name": "gps-neo6",
+  "author": "Chulaka Sampath",
+  "pins": [
+    "VCC",
+    "GND",
+    "TX",
+    "RX"
+  ],
+  "controls": []
+}

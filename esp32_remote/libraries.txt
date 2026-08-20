@@ -1,0 +1,11 @@
+# Wokwi Library List
+# See https://docs.wokwi.com/guides/libraries
+
+TinyGPSPlusPlus
+HardwareSerial_RS485
+TinyGPSPlus
+DHT22
+DHT sensor library
+ESP32_SoftWire
+Adafruit MPU6050
+Adafruit Sensor Calibration
