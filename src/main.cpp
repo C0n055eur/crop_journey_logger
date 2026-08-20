@@ -41,6 +41,59 @@ void setup() {
   mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
 }
 
+
+void displayData() {
+  // GPS Data
+  if (gps.location.isUpdated()) {
+    Serial.print("Latitude: ");
+    Serial.print(gps.location.lat(), 6);
+    Serial.print(", Longitude: ");
+    Serial.println(gps.location.lng(), 6);
+  }
+  
+  // Temperature Data
+  float temperature = dht.readTemperature();
+  if (isnan(temperature)) {
+    Serial.println("Error reading temperature!");
+  } else {
+    Serial.print("Temperature: ");
+    Serial.print(temperature);
+    Serial.println(" °C");
+  }
+  
+  // MPU6050 Data
+  sensors_event_t a, g, temp;
+  mpu.getEvent(&a, &g, &temp);
+  
+  // Print Accelerometer data
+  Serial.print("Accel X: ");
+  Serial.print(a.acceleration.x);
+  Serial.print(" m/s^2, Y: ");
+  Serial.print(a.acceleration.y);
+  Serial.print(" m/s^2, Z: ");
+  Serial.print(a.acceleration.z);
+  Serial.println(" m/s^2");
+  
+  // Print Gyroscope data
+  Serial.print("Gyro X: ");
+  Serial.print(g.gyro.x);
+  Serial.print(" rad/s, Y: ");
+  Serial.print(g.gyro.y);
+  Serial.print(" rad/s, Z: ");
+  Serial.print(g.gyro.z);
+  Serial.println(" rad/s");
+  
+  // Optional: Add GPS timestamp
+  if (gps.time.isUpdated()) {
+    Serial.print("Time: ");
+    Serial.print(gps.time.hour());
+    Serial.print(":");
+    Serial.print(gps.time.minute());
+    Serial.print(":");
+    Serial.println(gps.time.second());
+  }
+}
+
 void loop() {
   // Read GPS data
   while (gpsSerial.available() > 0) {
@@ -51,56 +104,4 @@ void loop() {
   // Display data
   displayData();
   delay(2000); // Delay for 2 seconds
-}
-
-void displayData() {
-  // GPS Data
-  if (gps.location.isUpdated()) {
-    Serial.print("Latitude: ");
-    Serial.print(gps.location.lat(), 6);
-    Serial.print(", Longitude: ");
-    Serial.println(gps.location.lng(), 6);
-  }
-
-  // Temperature Data
-  float temperature = dht.readTemperature();
-  if (isnan(temperature)) {
-    Serial.println("Error reading temperature!");
-  } else {
-    Serial.print("Temperature: ");
-    Serial.print(temperature);
-    Serial.println(" °C");
-  }
-
-  // MPU6050 Data
-  sensors_event_t a, g, temp;
-  mpu.getEvent(&a, &g, &temp);
-
-  // Print Accelerometer data
-  Serial.print("Accel X: ");
-  Serial.print(a.acceleration.x);
-  Serial.print(" m/s^2, Y: ");
-  Serial.print(a.acceleration.y);
-  Serial.print(" m/s^2, Z: ");
-  Serial.print(a.acceleration.z);
-  Serial.println(" m/s^2");
-
-  // Print Gyroscope data
-  Serial.print("Gyro X: ");
-  Serial.print(g.gyro.x);
-  Serial.print(" rad/s, Y: ");
-  Serial.print(g.gyro.y);
-  Serial.print(" rad/s, Z: ");
-  Serial.print(g.gyro.z);
-  Serial.println(" rad/s");
-
-  // Optional: Add GPS timestamp
-  if (gps.time.isUpdated()) {
-    Serial.print("Time: ");
-    Serial.print(gps.time.hour());
-    Serial.print(":");
-    Serial.print(gps.time.minute());
-    Serial.print(":");
-    Serial.println(gps.time.second());
-  }
 }
