@@ -1,1 +1,6 @@
 .pio
+.venv
+.cache
+logs
+compile_commands.json
+screenshot.png

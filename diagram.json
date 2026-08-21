@@ -3,23 +3,71 @@
   "author": "Prasanna",
   "editor": "wokwi",
   "parts": [
-    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 9.6, "left": -23.96, "attrs": {} },
-    { "type": "wokwi-neo-6m", "id": "gps1", "top": -85.38, "left": 177.6, "attrs": {} },
-    { "type": "wokwi-dht22", "id": "dht1", "top": -18.9, "left": -111, "attrs": {} },
-    { "type": "wokwi-mpu6050", "id": "imu1", "top": 51.82, "left": 213.52, "attrs": {} }
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+
+    { "type": "wokwi-dht22", "id": "dht1", "top": -120, "left": -160, "attrs": { "temperature": "18", "humidity": "90" } },
+    { "type": "wokwi-mpu6050", "id": "imu1", "top": 10, "left": -190, "attrs": {} },
+    { "type": "wokwi-microsd-card", "id": "sd1", "top": -110, "left": 260, "attrs": {} },
+    { "type": "board-mfrc522", "id": "rfid1", "top": 130, "left": 250, "attrs": {} },
+
+    { "type": "wokwi-led", "id": "ledG", "top": -180, "left": 100, "attrs": { "color": "green", "label": "OK" } },
+    { "type": "wokwi-led", "id": "ledY", "top": -180, "left": 150, "attrs": { "color": "yellow", "label": "WARN" } },
+    { "type": "wokwi-led", "id": "ledR", "top": -180, "left": 200, "attrs": { "color": "red", "label": "ALERT" } },
+    { "type": "wokwi-resistor", "id": "rG", "top": -120, "left": 100, "attrs": { "value": "220" } },
+    { "type": "wokwi-resistor", "id": "rY", "top": -120, "left": 150, "attrs": { "value": "220" } },
+    { "type": "wokwi-resistor", "id": "rR", "top": -120, "left": 200, "attrs": { "value": "220" } },
+
+    { "type": "wokwi-pushbutton", "id": "btnNext", "top": 250, "left": -160, "attrs": { "color": "blue", "label": "NEXT" } },
+    { "type": "wokwi-pushbutton", "id": "btnOk", "top": 250, "left": -40, "attrs": { "color": "green", "label": "OK" } }
   ],
   "connections": [
-    [ "esp:3V3", "gps1:VCC", "red", [ "h-19.05", "v-76.8", "h153.6" ] ],
-    [ "esp:GND.2", "gps1:GND", "black", [ "v-28.8" ] ],
-    [ "gps1:RX", "esp:17", "green", [ "h49.81", "v38.4" ] ],
-    [ "gps1:TX", "esp:16", "orange", [ "v0", "h30.61", "v153.6" ] ],
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+
+    [ "esp:17", "esp:16", "green", [ "h-30", "v-20", "h30" ] ],
+
+    [ "dht1:VCC", "esp:3V3", "red", [ "v0" ] ],
     [ "dht1:GND", "esp:GND.1", "black", [ "v0" ] ],
     [ "dht1:SDA", "esp:4", "green", [ "v0" ] ],
-    [ "dht1:VCC", "esp:3V3", "red", [ "v28.8", "h48", "v-86.4" ] ],
-    [ "imu1:VCC", "esp:3V3", "red", [ "v-67.2", "h-307.12", "v9.6" ] ],
-    [ "imu1:GND", "esp:GND.2", "black", [ "v-57.6", "h-182.32", "v19.2" ] ],
-    [ "imu1:SCL", "esp:22", "blue", [ "v-38.4", "h-163.12", "v38.4" ] ],
-    [ "imu1:SDA", "esp:21", "purple", [ "v-19.2", "h-134.32", "v48", "h-9.6" ] ]
+
+    [ "imu1:VCC", "esp:3V3", "red", [ "v0" ] ],
+    [ "imu1:GND", "esp:GND.1", "black", [ "v0" ] ],
+    [ "imu1:SCL", "esp:22", "blue", [ "v0" ] ],
+    [ "imu1:SDA", "esp:21", "purple", [ "v0" ] ],
+
+    [ "sd1:VCC", "esp:3V3", "red", [ "v0" ] ],
+    [ "sd1:GND", "esp:GND.2", "black", [ "v0" ] ],
+    [ "sd1:SCK", "esp:18", "cyan", [ "v0" ] ],
+    [ "sd1:DO", "esp:19", "magenta", [ "v0" ] ],
+    [ "sd1:DI", "esp:23", "yellow", [ "v0" ] ],
+    [ "sd1:CS", "esp:5", "orange", [ "v0" ] ],
+
+    [ "rfid1:3.3V", "esp:3V3", "red", [ "v0" ] ],
+    [ "rfid1:GND", "esp:GND.2", "black", [ "v0" ] ],
+    [ "rfid1:SCK", "esp:18", "cyan", [ "v0" ] ],
+    [ "rfid1:MISO", "esp:19", "magenta", [ "v0" ] ],
+    [ "rfid1:MOSI", "esp:23", "yellow", [ "v0" ] ],
+    [ "rfid1:SDA", "esp:15", "gold", [ "v0" ] ],
+    [ "rfid1:RST", "esp:13", "white", [ "v0" ] ],
+
+    [ "esp:25", "rG:1", "green", [ "v0" ] ],
+    [ "rG:2", "ledG:A", "green", [ "v0" ] ],
+    [ "ledG:C", "esp:GND.3", "black", [ "v0" ] ],
+    [ "esp:26", "rY:1", "gold", [ "v0" ] ],
+    [ "rY:2", "ledY:A", "gold", [ "v0" ] ],
+    [ "ledY:C", "esp:GND.3", "black", [ "v0" ] ],
+    [ "esp:27", "rR:1", "red", [ "v0" ] ],
+    [ "rR:2", "ledR:A", "red", [ "v0" ] ],
+    [ "ledR:C", "esp:GND.3", "black", [ "v0" ] ],
+
+    [ "btnNext:1.l", "esp:32", "blue", [ "v0" ] ],
+    [ "btnNext:2.l", "esp:GND.3", "black", [ "v0" ] ],
+    [ "btnOk:1.l", "esp:33", "green", [ "v0" ] ],
+    [ "btnOk:2.l", "esp:GND.3", "black", [ "v0" ] ]
   ],
+  "serialMonitor": {
+    "display": "always",
+    "newline": "lf"
+  },
   "dependencies": {}
 }

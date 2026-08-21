@@ -1,0 +1,112 @@
+name: 'Remote node - full journey'
+version: 1
+author: 'Prasanna'
+
+# Drives one complete Kolar -> Hoskote -> Yeshwanthpur run without a human:
+# crop selection, GPS fix, three RFID custody scans, a temperature excursion, a
+# pothole, and the end-of-journey summary.
+#
+# Note on ordering: wait-serial only matches output that arrives after the step
+# starts, so every wait is armed *before* the set-control that triggers it.
+
+steps:
+  # 1. Crop selection. TOMATO is first in the list and is the crop we want.
+  - wait-serial: '--- SELECT CROP ---'
+  - set-control:
+      part-id: btnOk
+      control: pressed
+      value: 1
+  - delay: 300ms
+  - set-control:
+      part-id: btnOk
+      control: pressed
+      value: 0
+  - wait-serial: '=== JOURNEY START'
+
+  # 2. Custody scan at the farm gate.
+  - delay: 1500ms
+  - set-control:
+      part-id: rfid1
+      control: card
+      value: 0
+  - set-control:
+      part-id: rfid1
+      control: tagPresent
+      value: 1
+  - wait-serial: 'CUSTODY: FARM'
+  - set-control:
+      part-id: rfid1
+      control: tagPresent
+      value: 0
+
+  # 3. The truck sits in the sun: temperature climbs past the tomato limit.
+  - delay: 2000ms
+  - set-control:
+      part-id: dht1
+      control: temperature
+      value: 31
+  - wait-serial: 'TEMP EXCURSION'
+
+  # 4. Custody scan at the collection centre.
+  - delay: 2000ms
+  - set-control:
+      part-id: rfid1
+      control: card
+      value: 1
+  - set-control:
+      part-id: rfid1
+      control: tagPresent
+      value: 1
+  - wait-serial: 'CUSTODY: COLLECTION'
+  - set-control:
+      part-id: rfid1
+      control: tagPresent
+      value: 0
+
+  # 5. A pothole on the Hoskote stretch.
+  - delay: 1500ms
+  - set-control:
+      part-id: imu1
+      control: accelZ
+      value: 4
+  - wait-serial: 'SHOCK EXCURSION'
+  - set-control:
+      part-id: imu1
+      control: accelZ
+      value: 1
+
+  # 6. Back into the shade before the mandi.
+  - delay: 1000ms
+  - set-control:
+      part-id: dht1
+      control: temperature
+      value: 19
+
+  # 7. Custody scan at the mandi.
+  - delay: 2000ms
+  - set-control:
+      part-id: rfid1
+      control: card
+      value: 2
+  - set-control:
+      part-id: rfid1
+      control: tagPresent
+      value: 1
+  - wait-serial: 'CUSTODY: MANDI'
+  - set-control:
+      part-id: rfid1
+      control: tagPresent
+      value: 0
+
+  # 8. The farmer presses OK at the mandi gate.
+  - delay: 1500ms
+  - set-control:
+      part-id: btnOk
+      control: pressed
+      value: 1
+  - delay: 300ms
+  - set-control:
+      part-id: btnOk
+      control: pressed
+      value: 0
+  - wait-serial: '---END JOURNEY.CSV---'
